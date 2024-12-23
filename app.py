@@ -1,9 +1,10 @@
+import os
 import telebot
 import json
 from telebot.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton
 
 # تعريف البوت مع التوكن الخاص به
-API_TOKEN = "7692526711:AAED6-sUtN9N8qt8Nd6VYlOPKxQcHdG51R4"
+API_TOKEN = os.getenv("TELEGRAM_API_TOKEN")  # استرجاع التوكن من متغيرات البيئة
 bot = telebot.TeleBot(API_TOKEN)
 
 # تعريف ملف تخزين البيانات
@@ -21,15 +22,6 @@ def save_data():
     with open(DATA_FILE, "w") as file:
         json.dump(users_data, file, indent=4)
 
-# دالة لإضافة بيانات المستخدم
-def add_user(user_id, username=None, balance=0):
-    if user_id not in users_data:
-        users_data[user_id] = {
-            "user_id": user_id,  # إضافة الـ user_id
-            "username": username or "غير متاح",  # إذا لم يكن اسم المستخدم موجودًا
-            "balance": balance
-        }
-        save_data()
 # دالة لإنشاء لوحة المفاتيح الرئيسية
 def main_menu():
     markup = ReplyKeyboardMarkup(resize_keyboard=True)
@@ -49,6 +41,12 @@ def start(message):
         bot.send_message(message.chat.id, "مرحبًا بك! يجب إنشاء حساب جديد.")
         msg = bot.send_message(message.chat.id, "👤 أدخل اسم المستخدم:")
         bot.register_next_step_handler(msg, get_username)
+
+# باقي الكود كما هو...
+
+
+
+
 
 # طلب اسم المستخدم
 def get_username(message):
